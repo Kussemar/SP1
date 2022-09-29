@@ -1,0 +1,98 @@
+/*
+SP1
+ - Brug variable hvor du kan, i stedet for at have koden fuld af mystiske værdier.
+ - Leg med så mange forskellige datatyper du kan - det skal selvfølgelig give mening, men se om du kan bruge både int, float, String, arrays og dit eget objekt.
+ - Find mindst 1 sted i koden hvor du har en god undskyldning for at bruge et loop
+ - Find mindst 1 sted i koden hvor du har en god undskyldning for at bruge en betingelse
+ - Organiser din kode i metoder med navne der er sigende, så din kode er let for andre at læse.
+ - Skriv gode kommentarer i koden, helst på engelsk.
+ */
+ 
+//Variabler
+int white = color (255);
+int red = color (255, 0, 0);
+int black = color (0);
+int radius = 0;
+float secondsRadius = 0;
+float minutesRadius = 0;
+float hoursRadius = 0;
+float clockDiameter = 0;
+
+float r = 150;
+float g = 0;
+float b = 0;
+
+void setup() {
+  size(400, 400);
+  frameRate(60);
+  
+  radius = min(width, height) / 2;
+  secondsRadius = radius * 0.72;
+  minutesRadius = radius * 0.60;
+  hoursRadius = radius * 0.50;
+  clockDiameter = radius * 1.8;
+  
+  background(white);
+  noStroke();
+colorMode(RGB, 400);
+for (int i = 0; i < 400; i++) {
+  for (int j = 0; j < 400; j++) {
+    stroke(i, j, 0);
+    point(i, j);
+  }
+}
+  ellipseMode(CENTER);
+  
+  println("Klokken er: " + hour() + " " + minute());  
+
+}
+void draw() {
+  // Draw the circle of the clock, and if the seconds is 30 or more the clock turns white.
+  if(second() >= 30){
+    
+  fill(black);
+  }
+  else{
+  fill(white);
+}
+  ellipse(width/2, height/2, 350, 350);
+  
+  
+  
+// We are using sin and cos to make the clock move and to estimate the time correctly. 
+  float s = map(second(), 0, 60, 0, TWO_PI)-HALF_PI;
+  float m = map(minute() + norm(second(), 0, 60), 0, 60, 0, TWO_PI)-HALF_PI;
+  float h = map(hour() + norm(minute(), 0, 60), 0, 24, 0, TWO_PI * 2)-HALF_PI;
+
+  // Draw the hands of the clock
+  
+  stroke(255);
+  strokeWeight(1);
+  line(width/2, height/2, width/2 + cos(s) * secondsRadius, height/2 + sin(s) * secondsRadius); // Second timer
+  
+  strokeWeight(2);
+  line(width/2, height/2, width/2 + cos(m) * minutesRadius, height/2 + sin(m) * minutesRadius); // Minutes timer
+  
+  strokeWeight(4);
+  line(width/2, height/2, width/2 + cos(h) * hoursRadius, height/2 + sin(h) * hoursRadius); // Hours timer
+  
+  
+  // Draw the minutes ticks with a for loop.
+   
+  beginShape(POINTS);
+  for (int i = 0; i < 360; i+=6) { // We are multiplying with 6 to make 60 dots in total, so we can estimate the time perfectly. We can take the number even higher to create less dots.
+     strokeWeight(3);
+     
+    if(i%5==0){
+    strokeWeight(10);  
+    }
+    
+    float angle = radians(i);
+    float x = height/2 + cos(angle) * secondsRadius;
+    float y = width/2 + sin(angle) * secondsRadius;
+   
+    vertex(x, y);
+  
+  }
+    
+} 
